@@ -1,3 +1,4 @@
 package-lock.json
 foobar.db
 node_modules/
+*.db
