@@ -104,5 +104,5 @@ app.get('/api/getAllData', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-    res.send("Sample Express App.");
+    res.send("<h1><center>Sample Express App.</center></h1>");
 });
