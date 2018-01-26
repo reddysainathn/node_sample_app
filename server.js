@@ -3,10 +3,11 @@ var app = express();
 var port = process.env.PORT || 8080;
 var bcrypt = require('bcrypt');
 var bodyParser = require('body-parser');
-app.use(bodyParser.json()); 
+var net = require('net');
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
-})); 
+}));
 var Database = require('better-sqlite3');
 var db = new Database('foobar.db', memory = true);
 db.prepare('CREATE  TABLE  IF NOT EXISTS lorem (info TEXT)').run();
@@ -33,8 +34,30 @@ app.post('/api/encryptInput', function (req, res) {
 });
 /////////3
 app.get('/api/getAllData', function (req, res) {
-
     res.send(arr);
+});
+
+/////2
+app.get('/api/sendPacket/:getData', function (req, res) {
+    var server = net.createServer(function (socket) {
+        var data1 = req.params.getData;
+        socket.write(data1);
+        socket.pipe(socket);
+    });
+    server.listen(1337, '127.0.0.1');
+    var client = new net.Socket();
+    client.connect(1337, '127.0.0.1', function () {
+        console.log('Connected');
+        client.write('Hello, server! Love, Client.');
+    });
+    client.on('data', function (data) {
+        console.log('Received: ' + data);
+        client.destroy(); // kill client after server's response
+    });
+    client.on('close', function () {
+        console.log('Connection closed');
+    });
+    res.send("Success!");
 });
 
 db.close();
