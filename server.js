@@ -23,7 +23,7 @@ for (var row of stmt1.iterate()) {
 
 app.listen(port);
 console.log('Server started! At http://localhost:' + port);
-
+//////////1
 app.post('/api/encryptInput', function (req, res) {
     var response = {
         "actual_String": req.body.textValue,
@@ -31,7 +31,7 @@ app.post('/api/encryptInput', function (req, res) {
     }
     res.send(response);
 });
-
+/////////3
 app.get('/api/getAllData', function (req, res) {
 
     res.send(arr);
