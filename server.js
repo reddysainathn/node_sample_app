@@ -4,27 +4,30 @@ var port = process.env.PORT || 8080;
 var bcrypt = require('bcrypt');
 var bodyParser = require('body-parser');
 var net = require('net');
+var Database = require('better-sqlite3');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-var Database = require('better-sqlite3');
-var db = new Database('foobar.db', memory = true);
-db.prepare('CREATE  TABLE  IF NOT EXISTS lorem (info TEXT)').run();
-db.prepare('delete from  lorem').run();
-var stmt = db.prepare('INSERT INTO lorem VALUES (?)');
-for (var i = 0; i < 10; i++) {
-    stmt.run("Ipsum " + i);
+
+function getData() {
+    var db = new Database('foobar.db', memory = true);
+    db.prepare('CREATE  TABLE  IF NOT EXISTS lorem (info TEXT)').run();
+    //db.prepare('delete from  lorem').run();
 }
-var stmt1 = db.prepare('SELECT * FROM lorem');
-var arr = [];
-for (var row of stmt1.iterate()) {
-    arr.push(row)
-}
+// var db = new Database('foobar.db', memory = true);
+// db.prepare('CREATE  TABLE  IF NOT EXISTS lorem (info TEXT)').run();
+// db.prepare('delete from  lorem').run();
+// var stmt = db.prepare('INSERT INTO lorem VALUES (?)');
+// for (var i = 0; i < 10; i++) {
+//     stmt.run("Ipsum " + i);
+// }
+
 
 app.listen(port);
 console.log('Server started! At http://localhost:' + port);
-//////////1
+
+///////1------
 app.post('/api/encryptInput', function (req, res) {
     var response = {
         "actual_String": req.body.textValue,
@@ -32,15 +35,22 @@ app.post('/api/encryptInput', function (req, res) {
     }
     res.send(response);
 });
-/////////3
+/////////3------
 app.get('/api/getAllData', function (req, res) {
+    var db = new Database('foobar.db', memory = true);
+    var stmt1 = db.prepare('SELECT * FROM lorem');
+    var arr = [];
+    for (var row of stmt1.iterate()) {
+        arr.push(row)
+    }
+    db.close();
     res.send(arr);
 });
 
-/////2
+/////2-------
 app.get('/api/sendPacket/:getData', function (req, res) {
+    var data1 = req.params.getData;
     var server = net.createServer(function (socket) {
-        var data1 = req.params.getData;
         socket.write(data1);
         socket.pipe(socket);
     });
@@ -52,12 +62,14 @@ app.get('/api/sendPacket/:getData', function (req, res) {
     });
     client.on('data', function (data) {
         console.log('Received: ' + data);
-        client.destroy(); // kill client after server's response
+        client.destroy(); 
     });
     client.on('close', function () {
         console.log('Connection closed');
     });
-    res.send("Success!");
+    var db = new Database('foobar.db', memory = true);
+    var stmt = db.prepare('INSERT INTO lorem VALUES (?)').run(data1);
+    var stmt1 = db.prepare('SELECT * FROM lorem where info=(?)').get(data1);
+    db.close();
+    res.send(stmt1);
 });
-
-db.close();
