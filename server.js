@@ -102,3 +102,7 @@ app.get('/api/getAllData', function (req, res) {
     //db.close();
     res.send(arr);
 });
+
+app.get('/', function (req, res) {
+    res.send("Sample Express App.");
+});
