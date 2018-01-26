@@ -1,6 +1,9 @@
 {
     "name": "express-parameters",
     "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+      },
     "dependencies": {
         "bcrypt": "^1.0.3",
         "better-sqlite3": "^4.1.0",
