@@ -6,7 +6,7 @@
 //better-sqlite3 --> Alternative for sqlite nodejs library
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 443;
 var bcrypt = require('bcrypt');
 var bodyParser = require('body-parser');
 var net = require('net');
